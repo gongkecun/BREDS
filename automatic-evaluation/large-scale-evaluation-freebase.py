@@ -34,7 +34,7 @@ acquired_bigrams = []
 headquarters_unigrams = ['headquarters', 'headquartered', 'offices', 'office',
                          'building', 'buildings', 'factory', 'plant', 'compound']
 headquarters_bigrams = ['based in', 'located in', 'main office', ' main offices',
-                        'offices in', 'building in','office in', 'branch in',
+                        'offices in', 'building in', 'office in', 'branch in',
                         'store in', 'firm in', 'factory in', 'plant in',
                         'head office', 'head offices', 'in central',
                         'in downtown', 'outskirts of', 'suburs of']
@@ -43,7 +43,7 @@ employment_unigrams = ['chief', 'scientist', 'professor', 'biologist', 'ceo',
                        'CEO', 'employer']
 employment_bigrams = []
 
-bad_tokens = [",", "(", ")", ";", "''",  "``", "'s", "-", "vs.", "v", "'", ":", ".", "--"]
+bad_tokens = [",", "(", ")", ";", "''", "``", "'s", "-", "vs.", "v", "'", ":", ".", "--"]
 stopwords_list = stopwords.words('english')
 not_valid = bad_tokens + stopwords_list
 
@@ -76,12 +76,12 @@ class ExtractedFact(object):
         self.passive_voice = _passive_voice
 
     def __cmp__(self, other):
-            if other.score > self.score:
-                return -1
-            elif other.score < self.score:
-                return 1
-            else:
-                return 0
+        if other.score > self.score:
+            return -1
+        elif other.score < self.score:
+            return 1
+        else:
+            return 0
 
     def __hash__(self):
         sig = hash(self.ent1) ^ hash(self.ent2) ^ hash(self.bef_words) ^ \
@@ -91,12 +91,12 @@ class ExtractedFact(object):
 
     def __eq__(self, other):
         if self.ent1 == other.ent1 and \
-           self.ent2 == other.ent2 and \
-           self.score == other.score and \
-           self.bef_words == other.bef_words and \
-           self.bet_words == other.bet_words and \
-           self.aft_words == other.aft_words and \
-           self.sentence == other.sentence:
+                self.ent2 == other.ent2 and \
+                self.score == other.score and \
+                self.bef_words == other.bef_words and \
+                self.bet_words == other.bet_words and \
+                self.aft_words == other.aft_words and \
+                self.sentence == other.sentence:
             return True
         else:
             return False
@@ -318,7 +318,7 @@ def load_dbpedia(data, database_1, database_2):
 
 def extract_bigrams(text):
     tokens = word_tokenize(text)
-    return [gram[0]+' '+gram[1] for gram in bigrams(tokens)]
+    return [gram[0] + ' ' + gram[1] for gram in bigrams(tokens)]
 
 
 # ########################################
@@ -374,7 +374,7 @@ def calculate_b(output, database_1, database_2, database_3, e1_type, e2_type):
         target=string_matching_parallel,
         args=(results[i], no_matches[i], database_1, database_2, database_3,
               queue, e1_type, e2_type))
-                 for i in range(num_cpus)]
+        for i in range(num_cpus)]
 
     for proc in processes:
         proc.start()
@@ -396,7 +396,6 @@ def calculate_b(output, database_1, database_2, database_3, e1_type, e2_type):
 @timecall
 def calculate_c(corpus, database_1, database_2, database_3, b, e1_type, e2_type,
                 rel_type, rel_words_unigrams, rel_words_bigrams):
-
     # contains the database facts described in the corpus
     # but not extracted by the system
     #
@@ -416,7 +415,7 @@ def calculate_c(corpus, database_1, database_2, database_3, b, e1_type, e2_type,
     if os.path.isfile("superset_" + e1_type + "_" + e2_type + ".pkl"):
         f = open("superset_" + e1_type + "_" + e2_type + ".pkl")
         print("\nLoading superset G'", "superset_" + e1_type + "_" + \
-                                       e2_type + ".pkl")
+              e2_type + ".pkl")
         g_dash_set = pickle.load(f)
         f.close()
 
@@ -437,7 +436,7 @@ def calculate_c(corpus, database_1, database_2, database_3, b, e1_type, e2_type,
         processes = [multiprocessing.Process(
             target=process_corpus,
             args=(queue, g_dash, e1_type, e2_type))
-                     for _ in range(num_cpus)]
+            for _ in range(num_cpus)]
 
         print("Extracting all possible " + e1_type + "," + e2_type + \
               " relationships from the corpus")
@@ -492,7 +491,7 @@ def calculate_c(corpus, database_1, database_2, database_3, b, e1_type, e2_type,
             target=string_matching_parallel,
             args=(results[i], no_matches[i],
                   database_1, database_2, database_3, queue, e1_type, e2_type))
-                     for i in range(num_cpus)]
+            for i in range(num_cpus)]
 
         for proc in processes:
             proc.start()
@@ -573,7 +572,6 @@ def calculate_c(corpus, database_1, database_2, database_3, b, e1_type, e2_type,
 @timecall
 def calculate_d(g_minus_d, a, e1_type, e2_type, index, rel_type,
                 rel_words_unigrams, rel_words_bigrams):
-
     # contains facts described in the corpus that are not
     # in the system output nor in the database
     #
@@ -588,7 +586,7 @@ def calculate_d(g_minus_d, a, e1_type, e2_type, index, rel_type,
     if os.path.isfile(rel_type + "_high_pmi_not_in_database.pkl"):
         f = open(rel_type + "_high_pmi_not_in_database.pkl")
         print("\nLoading high PMI facts not in the database", \
-            rel_type + "_high_pmi_not_in_database.pkl")
+              rel_type + "_high_pmi_not_in_database.pkl")
         g_minus_d = pickle.load(f)
         f.close()
 
@@ -606,7 +604,7 @@ def calculate_d(g_minus_d, a, e1_type, e2_type, index, rel_type,
             target=proximity_pmi_rel_word,
             args=(e1_type, e2_type, queue, index,
                   results[i], rel_words_unigrams, rel_words_bigrams))
-                     for i in range(num_cpus)]
+            for i in range(num_cpus)]
 
         for proc in processes:
             proc.start()
@@ -624,7 +622,7 @@ def calculate_d(g_minus_d, a, e1_type, e2_type, index, rel_type,
         if len(g_minus_d) > 0:
             f = open(rel_type + "_high_pmi_not_in_database.pkl", "wb")
             print("Dumping high PMI facts not in the database to", \
-                rel_type + "_high_pmi_not_in_database.pkl")
+                  rel_type + "_high_pmi_not_in_database.pkl")
             pickle.dump(g_minus_d, f)
             f.close()
 
@@ -646,8 +644,8 @@ def proximity_pmi_rel_word(e1_type, e2_type, queue, index, results,
                 r = queue.get_nowait()
                 if count % 50 == 0:
                     print("\n", multiprocessing.current_process(), \
-                        "In Queue", queue.qsize(), \
-                        "Total Matched: ", len(results))
+                          "In Queue", queue.qsize(), \
+                          "Total Matched: ", len(results))
                 if (r.ent1, r.ent2) not in all_in_database:
                     # if its not in the database calculate the PMI
                     entity1 = "<" + e1_type + ">" + r.ent1 + "</" + e1_type + ">"
@@ -675,7 +673,7 @@ def proximity_pmi_rel_word(e1_type, e2_type, queue, index, results,
 
                         for s_r in s.relationships:
                             if r.ent1.decode("utf8") == s_r.ent1 and \
-                                            r.ent2.decode("utf8") == s_r.ent2:
+                                    r.ent2.decode("utf8") == s_r.ent2:
 
                                 unigrams_rel_words = word_tokenize(s_r.between)
                                 bigrams_rel_words = extract_bigrams(s_r.between)
@@ -720,7 +718,7 @@ def string_matching_parallel(matches, no_matches, database_1, database_2,
             count += 1
             if count % 500 == 0:
                 print(multiprocessing.current_process(), \
-                    "In Queue", queue.qsize())
+                      "In Queue", queue.qsize())
 
             # check if its in cache, i.e., if tuple was already matched
             if (r.ent1, r.ent2) in all_in_database:
@@ -838,8 +836,8 @@ def proximity_pmi_a(e1_type, e2_type, queue, index, results, not_found,
                 count += 1
                 if count % 50 == 0:
                     print(multiprocessing.current_process(), \
-                        "To Process", queue.qsize(), \
-                        "Correct found:", len(results))
+                          "To Process", queue.qsize(), \
+                          "Correct found:", len(results))
 
                 # if its not in the database calculate the PMI
                 entity1 = "<" + e1_type + ">" + r.ent1 + "</" + e1_type + ">"
@@ -867,7 +865,7 @@ def proximity_pmi_a(e1_type, e2_type, queue, index, results, not_found,
                                  MIN_TOKENS_AWAY, CONTEXT_WINDOW)
                     for s_r in s.relationships:
                         if r.ent1.decode("utf8") == s_r.ent1 and \
-                                        r.ent2.decode("utf8") == s_r.ent2:
+                                r.ent2.decode("utf8") == s_r.ent2:
                             unigrams_bef_words = word_tokenize(s_r.before)
                             unigrams_bet_words = word_tokenize(s_r.between)
                             unigrams_aft_words = word_tokenize(s_r.after)
@@ -1109,6 +1107,7 @@ def main():
         print("Recall      : ", recall)
         print("F1          : ", f1)
         print("\n")
+
 
 if __name__ == "__main__":
     main()
