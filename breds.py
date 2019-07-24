@@ -8,11 +8,11 @@ from gensim import matutils
 from collections import defaultdict
 from nltk.data import load
 
-from breds.seed import Seed
-from breds.pattern import Pattern
-from breds.config import Config
-from breds.tuple import Tuple
-from breds.sentence import Sentence
+from BREDS.breds.seed import Seed
+from BREDS.breds.pattern import Pattern
+from BREDS.breds.config import Config
+from BREDS.breds.tuple import Tuple
+from BREDS.breds.sentence import Sentence
 
 __author__ = "David S. Batista"
 __email__ = "dsbatista@inesc-id.pt"
